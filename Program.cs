@@ -1,4 +1,5 @@
 using DiscordLite.Infrastructure;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
@@ -13,6 +14,8 @@ var connectionString =
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+builder.Services.AddValidation();
 
 var app = builder.Build();
 
