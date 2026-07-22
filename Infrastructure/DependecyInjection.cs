@@ -15,7 +15,7 @@ public static class DependencyInjection
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
         services.AddScoped<IPasswordHasher, PasswordHasher>();
-
+        services.AddScoped<IJwtService, JwtService>();
         return services;
     }
 }
