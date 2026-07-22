@@ -28,7 +28,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Features\Authentication\Login\" />
       <Folder Include="Features\Authentication\Refresh\" />
     </ItemGroup>
 

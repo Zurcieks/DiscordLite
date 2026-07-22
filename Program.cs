@@ -1,4 +1,5 @@
 using System.Text;
+using DiscordLite.Features.Authentication.Login;
 using DiscordLite.Features.Authentication.Register;
 using DiscordLite.Infrastructure;
 using DiscordLite.Infrastructure.Security;
@@ -53,7 +54,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.RegisterEndpoint();
+app.MapRegisterEndpoint();
+app.MapLoginEndpoint();
  
 app.Run();
 

@@ -13,7 +13,7 @@ public record RegisterRequest(string Username, string Password);
 public static class Register
 {
 
-    public static IEndpointRouteBuilder RegisterEndpoint(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapRegisterEndpoint(this IEndpointRouteBuilder app)
     {
         app.MapPost("/api/register", Handle)
             .WithTags("Authentication")
