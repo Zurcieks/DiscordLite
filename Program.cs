@@ -1,7 +1,9 @@
 using System.Text;
 using DiscordLite.Features.Authentication.Login;
+using DiscordLite.Features.Authentication.Profile;
 using DiscordLite.Features.Authentication.Register;
 using DiscordLite.Infrastructure;
+using DiscordLite.Infrastructure.OpenApi;
 using DiscordLite.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -10,7 +12,10 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
  
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+});
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddValidation();
@@ -24,6 +29,8 @@ builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
+        options.MapInboundClaims = false;
+        
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
@@ -36,6 +43,8 @@ builder.Services
                 Encoding.UTF8.GetBytes(jwtOptions.Secret))
         };
     });
+
+ 
 
 builder.Services.AddAuthorization();
 
@@ -56,6 +65,7 @@ app.UseAuthorization();
 
 app.MapRegisterEndpoint();
 app.MapLoginEndpoint();
+app.MapGetProfile();
  
 app.Run();
 
