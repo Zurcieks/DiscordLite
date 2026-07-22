@@ -1,4 +1,5 @@
 using DiscordLite.Common.Interfaces;
+using DiscordLite.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
  
 
@@ -13,7 +14,7 @@ public static class DependencyInjection
         services.AddDbContext<AppDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped<IPasswordHasher, IPasswordHasher>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
 
         return services;
     }

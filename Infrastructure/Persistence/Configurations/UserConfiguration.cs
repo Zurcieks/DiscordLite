@@ -11,38 +11,27 @@ public sealed class UserConfiguration
     {
         builder.ToTable("users");
 
-        builder.HasKey(user => user.Id);
+        builder.HasKey(x => x.Id);
 
-        builder.Property(user => user.Id)
-            .HasColumnName("id");
-
-        builder.Property(user => user.Username)
-            .HasColumnName("username")
-            .HasMaxLength(32)
-            .IsRequired();
-
-        builder.Property(user => user.Email)
-            .HasColumnName("email")
-            .HasMaxLength(254)
-            .IsRequired();
-
-        builder.Property(user => user.AvatarUrl)
-            .HasColumnName("avatar_url")
+        builder.Property(x => x.Username)
+            .IsRequired()
+            .HasMaxLength(50);
+        
+        builder.Property(x => x.UsernameNormalized).IsRequired().HasMaxLength(50);
+        
+        
+        builder.Property(x => x.AvatarUrl)
             .HasMaxLength(2_048);
 
-        builder.Property(user => user.PasswordHash)
-            .HasColumnName("password_hash")
+        builder.Property(x => x.PasswordHash)
             .HasMaxLength(255)
             .IsRequired();
 
-        builder.Property(user => user.CreatedAt)
-            .HasColumnName("created_at")
+        builder.Property(x => x.CreatedAt)
             .IsRequired();
 
-        builder.HasIndex(user => user.Username)
+        builder.HasIndex(x => x.UsernameNormalized)
             .IsUnique();
-
-        builder.HasIndex(user => user.Email)
-            .IsUnique();
+        
     }
 }
