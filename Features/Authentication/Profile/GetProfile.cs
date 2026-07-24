@@ -7,7 +7,7 @@ namespace DiscordLite.Features.Authentication.Profile;
 
 public static class GetProfile
 {
-    public static IEndpointRouteBuilder MapGetProfile(this IEndpointRouteBuilder app)
+    public static IEndpointRouteBuilder MapGetProfileEndpoint(this IEndpointRouteBuilder app)
     {
         app.MapGet("/api/me", Handle)
             .WithTags("Authentication")
@@ -29,7 +29,7 @@ public static class GetProfile
             .Select(u => new { u.Id, u.Username, u.AvatarUrl, u.CreatedAt })
             .FirstOrDefaultAsync(ct);
 
-        if (user is null)
+        if (user is null)   
             return Results.NotFound();
 
         return Results.Ok(user);

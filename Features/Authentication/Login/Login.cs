@@ -2,7 +2,9 @@ using DiscordLite.Common;
 using DiscordLite.Common.Interfaces;
 using DiscordLite.Domain;
 using DiscordLite.Infrastructure;
+using DiscordLite.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Infrastructure.Internal;
 
 namespace DiscordLite.Features.Authentication.Login;
@@ -25,6 +27,7 @@ public static class Login
         LoginRequest request,
         IPasswordHasher hasher,
         IJwtService jwtService,
+        IOptions<JwtOptions> jwtOptions,
         AppDbContext context,
         CancellationToken ct)
     {
@@ -42,10 +45,19 @@ public static class Login
             return Results.Unauthorized();
 
         var accessToken = jwtService.GenerateAccessToken(user.Id, user.Username);
+        
+        var refreshToken = new RefreshToken(
+            user.Id,
+            TimeSpan.FromDays(jwtOptions.Value.RefreshTokenExpirationDays));
+        
+        context.RefreshTokens.Add(refreshToken);
+        
+        await context.SaveChangesAsync(ct);
 
         return Results.Ok(new
         {
             accessToken,
+            refreshToken = refreshToken.Token,
             user.Id,
             user.Username,
         });

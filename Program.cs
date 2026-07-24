@@ -1,6 +1,8 @@
 using System.Text;
 using DiscordLite.Features.Authentication.Login;
+using DiscordLite.Features.Authentication.Logout;
 using DiscordLite.Features.Authentication.Profile;
+using DiscordLite.Features.Authentication.Refresh;
 using DiscordLite.Features.Authentication.Register;
 using DiscordLite.Infrastructure;
 using DiscordLite.Infrastructure.OpenApi;
@@ -65,7 +67,9 @@ app.UseAuthorization();
 
 app.MapRegisterEndpoint();
 app.MapLoginEndpoint();
-app.MapGetProfile();
+app.MapGetProfileEndpoint();
+app.MapRefreshTokenEndpoint();
+app.MapLogoutEndpoint();
  
 app.Run();
 
