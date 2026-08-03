@@ -1,0 +1,7 @@
+﻿services:
+  discordlite.api:
+    image: discordlite.api
+    build:
+      context: .
+      dockerfile: DiscordLite.Api/Dockerfile
+

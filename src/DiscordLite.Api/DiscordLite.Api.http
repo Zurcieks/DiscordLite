@@ -1,0 +1,6 @@
+@DiscordLite.Api_HostAddress = http://localhost:5087
+
+GET {{DiscordLite.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
