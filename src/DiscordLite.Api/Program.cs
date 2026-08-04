@@ -1,5 +1,6 @@
 using System.Text;
 using DiscordLite.Api.Exceptions;
+using DiscordLite.Api.OpenApi;
 using DiscordLite.Api.Security;
 using DiscordLite.Application;
 using DiscordLite.Application.Abstractions;
@@ -7,12 +8,20 @@ using DiscordLite.Infrastructure;
 using DiscordLite.Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
+
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+});
+
 
 var jwtOptions = builder.Configuration.GetSection("Jwt").Get<JwtOptions>()!;
+
+
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -47,6 +56,7 @@ app.UseHttpsRedirection();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.MapScalarApiReference(); 
 }
 
 app.UseAuthentication();
