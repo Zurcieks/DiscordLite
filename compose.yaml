@@ -1,7 +1,50 @@
 ﻿services:
-  discordlite.api:
-    image: discordlite.api
-    build:
-      context: .
-      dockerfile: DiscordLite.Api/Dockerfile
+  postgres:
+    image: postgres:latest
+    container_name: discordlite-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: discordlite
+      POSTGRES_PASSWORD: discordlite123
+      POSTGRES_DB: discordlite
+    ports:
+      - "5432:5432"
+    volumes:
+      - type: volume
+        source: pg_data
+        target: /var/lib/postgresql/18/docker
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U discordlite -d discordlite"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - discordlite-net
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: discordlite-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_REPLACE_SERVERS_ON_STARTUP: "True"
+    ports:
+      - "5050:80"
+    volumes:
+      - type: volume
+        source: pgadmin_data
+        target: /var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - discordlite-net
+
+volumes:
+  pg_data:
+  pgadmin_data:
+
+networks:
+  discordlite-net:
+    driver: bridge

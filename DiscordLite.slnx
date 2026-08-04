@@ -2,14 +2,16 @@
   <Folder Name="/Solution Items/">
     <File Path="compose.yaml" />
   </Folder>
+
   <Folder Name="/src/">
-    <Project Path="DiscordLite.Api/DiscordLite.Api.csproj" />
-    <Project Path="DiscordLite.Application/DiscordLite.Application.csproj" />
-    <Project Path="DiscordLite.Domain/DiscordLite.Domain.csproj" />
-    <Project Path="DiscordLite.Infrastructure/DiscordLite.Infrastructure.csproj" />
+    <Project Path="src/DiscordLite.Api/DiscordLite.Api.csproj" />
+    <Project Path="src/DiscordLite.Application/DiscordLite.Application.csproj" />
+    <Project Path="src/DiscordLite.Domain/DiscordLite.Domain.csproj" />
+    <Project Path="src/DiscordLite.Infrastructure/DiscordLite.Infrastructure.csproj" />
   </Folder>
+
   <Folder Name="/tests/">
-    <Project Path="DiscordLite.IntegrationTests/DiscordLite.IntegrationTests.csproj" />
-    <Project Path="DiscordLite.UnitTests/DiscordLite.UnitTests.csproj" />
+    <Project Path="tests/DiscordLite.IntegrationTests/DiscordLite.IntegrationTests.csproj" />
+    <Project Path="tests/DiscordLite.UnitTests/DiscordLite.UnitTests.csproj" />
   </Folder>
 </Solution>
