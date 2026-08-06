@@ -1,4 +1,5 @@
 using DiscordLite.Application.Abstractions;
+using DiscordLite.Infrastructure.BackgroundServices;
 using DiscordLite.Infrastructure.Persistence;
 using DiscordLite.Infrastructure.Persistence.Repositories;
 using DiscordLite.Infrastructure.Security;
@@ -24,6 +25,8 @@ public static class DependencyInjection
         services.AddScoped<IPasswordService, PasswordService>();
         services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddHostedService<RefreshTokenCleanupService>();
         return services;
     }
 }

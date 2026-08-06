@@ -17,19 +17,13 @@ public sealed class ValidationBehavior<TRequest, TResponse>(
         var validatorArray = validators.ToArray();
 
         if (validatorArray.Length == 0)
-        {
-            throw new InvalidOperationException(
-                $"No validator registered for request " +
-                $"'{typeof(TRequest).FullName}'.");
-        }
+            return await next(cancellationToken);
 
         var context = new ValidationContext<TRequest>(request);
 
         var validationResults = await Task.WhenAll(
             validatorArray.Select(validator =>
-                validator.ValidateAsync(
-                    context,
-                    cancellationToken)));
+                validator.ValidateAsync(context, cancellationToken)));
 
         var errors = validationResults
             .SelectMany(result => result.Errors)
@@ -37,15 +31,10 @@ public sealed class ValidationBehavior<TRequest, TResponse>(
             .GroupBy(failure => failure.PropertyName)
             .ToDictionary(
                 group => group.Key,
-                group => group
-                    .Select(failure => failure.ErrorMessage)
-                    .Distinct()
-                    .ToArray());
+                group => group.Select(failure => failure.ErrorMessage).Distinct().ToArray());
 
         if (errors.Count > 0)
-        {
             throw new ValidationRequestException(errors);
-        }
 
         return await next(cancellationToken);
     }

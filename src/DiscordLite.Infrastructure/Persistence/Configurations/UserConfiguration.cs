@@ -25,6 +25,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         
         builder.HasIndex(u => u.NormalizedUsername)
             .IsUnique();
+        
+       
 
     }
 }
