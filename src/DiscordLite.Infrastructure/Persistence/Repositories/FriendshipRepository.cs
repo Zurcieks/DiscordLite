@@ -18,6 +18,12 @@ namespace DiscordLite.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(x => (x.SenderId == userId1 && x.ReceiverId == userId2) || (x.SenderId == userId2 && x.ReceiverId == userId1), ct);
         }
 
+        public async Task<Friendship?> GetByIdAsync(Guid friendshipId, CancellationToken ct)
+        {
+            return await Context.Friendships
+                .FirstOrDefaultAsync(x => x.Id == friendshipId, ct);
+        }
+
         public async Task<List<FriendRequestDto>> GetIncomingAndOutgoingRequests(Guid userId, CancellationToken ct)
         {
             return await Context.Friendships
@@ -28,6 +34,7 @@ namespace DiscordLite.Infrastructure.Persistence.Repositories
                 user => user.Id,
                 (friends, user) => new FriendRequestDto
                 (
+                    friends.Id,
                     user.Id,
                     user.Username,
                     user.AvatarUrl,

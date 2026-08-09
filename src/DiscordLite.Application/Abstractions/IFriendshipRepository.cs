@@ -10,5 +10,6 @@ namespace DiscordLite.Application.Abstractions
     {
         Task<Friendship?> GetBetweenAsync(Guid userId1, Guid userId2, CancellationToken ct);
         Task<List<FriendRequestDto>> GetIncomingAndOutgoingRequests(Guid userId, CancellationToken ct);
+        Task<Friendship?> GetByIdAsync(Guid friendshipId, CancellationToken ct);
     }
 }
