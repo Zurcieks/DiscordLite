@@ -17,7 +17,7 @@ public sealed class GetMyProfileQueryHandler(
             throw new UnauthorizedException("User not found");
 
         var user = await userRepository.GetByIdAsync(userId.Value, ct)
-                   ?? throw new NotFoundException(nameof(User), userId.Value);
+                   ?? throw new NotFoundException("User not found.");
 
         return new UserProfileResponse(user.Id, user.Username, user.AvatarUrl);
     }

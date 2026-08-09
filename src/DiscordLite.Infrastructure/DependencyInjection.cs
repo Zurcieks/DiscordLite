@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddHostedService<RefreshTokenCleanupService>();
+        services.AddScoped<IFriendshipRepository, FriendshipRepository>();
         return services;
     }
 }

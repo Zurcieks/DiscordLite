@@ -1,4 +1,3 @@
-// Application/Auth/Login/LoginUserCommandHandler.cs
 using DiscordLite.Application.Abstractions;
 using DiscordLite.Application.Exceptions;
 using DiscordLite.Domain.Entities;

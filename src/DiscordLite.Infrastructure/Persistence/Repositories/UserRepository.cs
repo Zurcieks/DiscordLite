@@ -23,5 +23,6 @@ public sealed class UserRepository(AppDbContext context) : RepositoryBase<User>(
         var user = await Context.Users.AnyAsync(x => x.NormalizedUsername == normalizedUsername, ct);
         return user;
     }
-    
+
+   
 }

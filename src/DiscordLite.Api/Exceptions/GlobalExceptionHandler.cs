@@ -40,6 +40,14 @@ public sealed class GlobalExceptionHandler(
                 (StatusCodes.Status400BadRequest, "Invalid Password Hash"),
             InvalidAvatarUrlException => 
                 (StatusCodes.Status400BadRequest, "Invalid Avatar Url"),
+            InvalidUserIdException =>
+                (StatusCodes.Status400BadRequest, "Invalid User Id"),
+            NotFriendRequestReceiverException => 
+                (StatusCodes.Status400BadRequest, "Not Friend Request Receiver"),
+            SelfFriendRequestException =>
+                (StatusCodes.Status400BadRequest, "Self Friend Request"),
+            InvalidFriendshipRequestException => 
+                (StatusCodes.Status400BadRequest, "Invalid Friendship Request"),
 
             DomainException =>
                 (StatusCodes.Status422UnprocessableEntity,

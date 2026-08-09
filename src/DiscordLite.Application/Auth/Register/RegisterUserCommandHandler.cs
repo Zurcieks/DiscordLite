@@ -22,7 +22,7 @@ public sealed class RegisterUserCommandHandler(
         var passwordHash = passwordService.Hash(request.Password);
         
         var user = User.Create(request.Username, passwordHash);
-        
+
         await userRepository.AddAsync(user, ct);
         await userRepository.SaveChangesAsync(ct);
         
