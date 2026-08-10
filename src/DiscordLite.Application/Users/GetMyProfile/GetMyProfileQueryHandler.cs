@@ -11,12 +11,9 @@ public sealed class GetMyProfileQueryHandler(
 {
     public async Task<UserProfileResponse> Handle(GetMyProfileQuery request, CancellationToken ct)
     {
-
         var userId = currentUser.UserId;
-        if (userId is null)
-            throw new UnauthorizedException("User not found");
-
-        var user = await userRepository.GetByIdAsync(userId.Value, ct)
+        
+        var user = await userRepository.GetByIdAsync(userId, ct)
                    ?? throw new NotFoundException("User not found.");
 
         return new UserProfileResponse(user.Id, user.Username, user.AvatarUrl);

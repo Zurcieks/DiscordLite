@@ -1,5 +1,4 @@
 ﻿using DiscordLite.Application.Abstractions;
-using DiscordLite.Application.Exceptions;
 using MediatR;
  
 
@@ -12,10 +11,8 @@ namespace DiscordLite.Application.Friendships.GetFriendsRequest
         public async Task<GetFriendsRequestsResponse> Handle(GetFriendsRequestQuery request, CancellationToken ct)
         {
             var userId = currentUser.UserId;
-            if (userId is null)
-                throw new UnauthorizedException("User is not authenticated.");
-
-            var requests = await friendshipRepository.GetIncomingAndOutgoingRequests(userId.Value, ct);
+            
+            var requests = await friendshipRepository.GetIncomingAndOutgoingRequests(userId, ct);
 
             var incoming = requests.Where(x => x.IsIncoming).ToList();
             var outgoing = requests.Where(x => !x.IsIncoming).ToList();

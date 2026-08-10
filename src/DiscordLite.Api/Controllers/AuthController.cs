@@ -1,4 +1,3 @@
-// Api/Controllers/AuthController.cs
 using DiscordLite.Application.Auth.Login;
 using DiscordLite.Application.Auth.Refresh;
 using DiscordLite.Application.Auth.Register;

@@ -2,5 +2,5 @@ namespace DiscordLite.Application.Abstractions;
 
 public interface ICurrentUser
 {
-    Guid? UserId{ get; }
+    Guid UserId{ get; }
 }

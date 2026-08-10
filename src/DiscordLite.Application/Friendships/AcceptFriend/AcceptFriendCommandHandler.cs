@@ -1,6 +1,5 @@
 ﻿using DiscordLite.Application.Abstractions;
 using DiscordLite.Application.Exceptions;
-using DiscordLite.Application.Friendships.AddFriend;
 using MediatR;
  
 
@@ -13,15 +12,12 @@ namespace DiscordLite.Application.Friendships.AcceptFriend
         public async Task Handle(AcceptFriendCommand request, CancellationToken ct)
         {
             var userId = currentUser.UserId;
-
-            if (userId is null)
-                throw new UnauthorizedException("User is not authenticated.");
-
+            
             var friendship = await friendshipRepository.GetByIdAsync(request.FriendshipId, ct);
             if(friendship is null)
                 throw new NotFoundException("Friendship not found.");
 
-            friendship.Accept(userId.Value);
+            friendship.Accept(userId);
 
             await friendshipRepository.SaveChangesAsync(ct);
         }

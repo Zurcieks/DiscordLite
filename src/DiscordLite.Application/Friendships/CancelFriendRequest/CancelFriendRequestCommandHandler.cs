@@ -12,8 +12,6 @@ public sealed class CancelFriendRequestCommandHandler(
     public async Task Handle(CancelFriendRequestCommand request, CancellationToken ct)
     {
         var userId = currentUser.UserId;
-        if (userId is null)
-            throw new UnauthorizedException("User is not authenticated.");
 
         var friendship = await friendshipRepository.GetByIdAsync(request.FriendshipId, ct);
         if (friendship is null)
