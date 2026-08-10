@@ -1,4 +1,5 @@
-﻿using DiscordLite.Application.Friendships.GetFriendsRequest;
+﻿using DiscordLite.Application.Friendships.GetAllFriends;
+using DiscordLite.Application.Friendships.GetFriendsRequest;
 using DiscordLite.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,5 +12,6 @@ namespace DiscordLite.Application.Abstractions
         Task<Friendship?> GetBetweenAsync(Guid userId1, Guid userId2, CancellationToken ct);
         Task<List<FriendRequestDto>> GetIncomingAndOutgoingRequests(Guid userId, CancellationToken ct);
         Task<Friendship?> GetByIdAsync(Guid friendshipId, CancellationToken ct);
+        Task<List<FriendDto>> GetAllFriends(Guid userId, CancellationToken ct);
     }
 }

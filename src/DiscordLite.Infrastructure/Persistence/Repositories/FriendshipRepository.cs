@@ -1,4 +1,5 @@
 ﻿using DiscordLite.Application.Abstractions;
+using DiscordLite.Application.Friendships.GetAllFriends;
 using DiscordLite.Application.Friendships.GetFriendsRequest;
 using DiscordLite.Domain.Entities;
 using DiscordLite.Infrastructure.Persistence;
@@ -12,6 +13,24 @@ namespace DiscordLite.Infrastructure.Persistence.Repositories
 {
     public sealed class FriendshipRepository(AppDbContext context) : RepositoryBase<Friendship>(context), IFriendshipRepository
     {
+        public async Task<List<FriendDto>> GetAllFriends(Guid userId, CancellationToken ct)
+        {
+            return await Context.Friendships
+                .Where(x => x.Status == FriendshipStatus.Accepted && 
+                (x.SenderId == userId || x.ReceiverId == userId)) // jedna z stron relacji
+                .Join(
+                Context.Users,
+                friends => friends.SenderId == userId ? friends.ReceiverId : friends.SenderId, 
+                user => user.Id,
+                (friends, user) => new FriendDto
+                (
+                    user.Id,
+                    user.Username,
+                    user.AvatarUrl
+                )).ToListAsync(ct);
+                   
+        }
+
         public async Task<Friendship?> GetBetweenAsync(Guid userId1, Guid userId2, CancellationToken ct)
         {
             return await Context.Friendships
