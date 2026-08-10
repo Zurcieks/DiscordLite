@@ -3,6 +3,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DiscordLite.Application.Exceptions;
 
 namespace DiscordLite.Application.Friendships.GetAllFriends
 {
@@ -14,7 +15,7 @@ namespace DiscordLite.Application.Friendships.GetAllFriends
         {
             var userId = currentUser.UserId;
             if (userId is null)
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedException("User is not authenticated.");
 
             var allFriends = await friendshipRepository.GetAllFriends(userId.Value, ct);
 

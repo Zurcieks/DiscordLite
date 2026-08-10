@@ -8,14 +8,14 @@ namespace DiscordLite.Application.Friendships.AcceptFriend
 {
     public sealed class AcceptFriendCommandHandler(
         IFriendshipRepository friendshipRepository,
-        ICurrentUser currentUser) : IRequestHandler<AcceptFriendCommand, string>
+        ICurrentUser currentUser) : IRequestHandler<AcceptFriendCommand>
     {
-        public async Task<string> Handle(AcceptFriendCommand request, CancellationToken ct)
+        public async Task Handle(AcceptFriendCommand request, CancellationToken ct)
         {
             var userId = currentUser.UserId;
 
             if (userId is null)
-                throw new UnauthorizedAccessException();
+                throw new UnauthorizedException("User is not authenticated.");
 
             var friendship = await friendshipRepository.GetByIdAsync(request.FriendshipId, ct);
             if(friendship is null)
@@ -24,7 +24,6 @@ namespace DiscordLite.Application.Friendships.AcceptFriend
             friendship.Accept(userId.Value);
 
             await friendshipRepository.SaveChangesAsync(ct);
-            return "Friendship accepted.";
         }
     }
 }
