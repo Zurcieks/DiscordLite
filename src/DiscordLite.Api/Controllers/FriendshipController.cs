@@ -1,6 +1,7 @@
 ﻿using DiscordLite.Application.Friendships.AcceptFriend;
 using DiscordLite.Application.Friendships.AddFriend;
 using DiscordLite.Application.Friendships.CancelFriendRequest;
+using DiscordLite.Application.Friendships.DeleteFriend;
 using DiscordLite.Application.Friendships.GetAllFriends;
 using DiscordLite.Application.Friendships.GetFriendsRequest;
 using DiscordLite.Application.Friendships.RejectFriendRequest;
@@ -62,6 +63,16 @@ namespace DiscordLite.Api.Controllers
             CancellationToken ct)
         {
             await sender.Send(new RejectFriendRequestCommand(friendshipId), ct);
+
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteFriend(
+            [FromRoute] Guid friendshipId,
+            CancellationToken ct)
+        {
+            await sender.Send(new DeleteFriendCommand(friendshipId), ct);
 
             return NoContent();
         }
