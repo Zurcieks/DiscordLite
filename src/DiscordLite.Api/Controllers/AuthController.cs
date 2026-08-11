@@ -24,8 +24,7 @@ public sealed class AuthController(ISender sender) : ControllerBase
     public async Task<ActionResult<LoginUserResponse>> Login(LoginUserCommand command, CancellationToken ct)
     {
         var result = await sender.Send(command, ct);
-
-        SetRefreshTokenCookie(result.RefreshToken);
+        
         
         return Ok(result);
     }
@@ -39,21 +38,9 @@ public sealed class AuthController(ISender sender) : ControllerBase
             return Unauthorized();
 
         var result = await sender.Send(new RefreshTokenCommand(refreshToken), ct);
-
-        SetRefreshTokenCookie(result.RefreshToken);
+        
 
         return Ok(result);
     }
 
-    private void SetRefreshTokenCookie(string refreshToken)
-    {
-        Response.Cookies.Append(RefreshTokenCookieName, refreshToken, new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.None,
-            Expires = DateTimeOffset.UtcNow.AddDays(7),
-            Path = "/api/auth/refresh"
-        });
-    }
 }
