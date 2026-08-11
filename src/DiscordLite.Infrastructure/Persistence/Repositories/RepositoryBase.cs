@@ -11,7 +11,7 @@ public abstract class RepositoryBase<T>(AppDbContext context): IRepository<T> wh
         await Context.Set<T>().AddAsync(entity, ct);
     }
 
-    public void Remove(T entity, CancellationToken ct)
+    public void Remove(T entity)
     {
         Context.Set<T>().Remove(entity);
     }

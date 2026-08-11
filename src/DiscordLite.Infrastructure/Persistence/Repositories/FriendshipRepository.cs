@@ -31,10 +31,6 @@ namespace DiscordLite.Infrastructure.Persistence.Repositories
                    
         }
 
-        public void Delete(Friendship friendship)
-        {
-            Context.Friendships.Remove(friendship);
-        }
 
         public async Task<Friendship?> GetBetweenAsync(Guid userId1, Guid userId2, CancellationToken ct)
         {

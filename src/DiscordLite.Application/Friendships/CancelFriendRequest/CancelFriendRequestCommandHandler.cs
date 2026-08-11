@@ -16,14 +16,14 @@ public sealed class CancelFriendRequestCommandHandler(
         var friendship = await friendshipRepository.GetByIdAsync(request.FriendshipId, ct);
         if (friendship is null)
             throw new NotFoundException("Friend request not found");
+        
+        if(userId != friendship.SenderId)
+            throw new ForbiddenException("Only the sender can cancel this friend request.");
 
         if(friendship.Status != FriendshipStatus.Pending)
             throw new ConflictException("Only pending friend requests can be canceled.");
         
-        if(userId != friendship.SenderId)
-            throw new ForbiddenException("Only the sender can cancel this friend request.");
-        
-        friendshipRepository.Delete(friendship);
+        friendshipRepository.Remove(friendship);
         
         await friendshipRepository.SaveChangesAsync(ct);
     }

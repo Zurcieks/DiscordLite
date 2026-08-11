@@ -3,6 +3,7 @@ using DiscordLite.Application.Friendships.AddFriend;
 using DiscordLite.Application.Friendships.CancelFriendRequest;
 using DiscordLite.Application.Friendships.GetAllFriends;
 using DiscordLite.Application.Friendships.GetFriendsRequest;
+using DiscordLite.Application.Friendships.RejectFriendRequest;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -46,11 +47,21 @@ namespace DiscordLite.Api.Controllers
         }
 
         [HttpPost("requests/{friendshipId}/cancel")]
-        public async Task<IActionResult> CancelFriend(
+        public async Task<ActionResult> CancelFriend(
             [FromRoute] Guid friendshipId,
             CancellationToken ct)
         {
             await sender.Send(new CancelFriendRequestCommand(friendshipId), ct);
+
+            return NoContent();
+        }
+
+        [HttpPost("requests/{friendshipId}/reject")]
+        public async Task<ActionResult> RejectFriend(
+            [FromRoute] Guid friendshipId,
+            CancellationToken ct)
+        {
+            await sender.Send(new RejectFriendRequestCommand(friendshipId), ct);
 
             return NoContent();
         }

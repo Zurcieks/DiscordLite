@@ -13,6 +13,5 @@ namespace DiscordLite.Application.Abstractions
         Task<List<FriendRequestDto>> GetIncomingAndOutgoingRequests(Guid userId, CancellationToken ct);
         Task<Friendship?> GetByIdAsync(Guid friendshipId, CancellationToken ct);
         Task<List<FriendDto>> GetAllFriends(Guid userId, CancellationToken ct);
-        void Delete(Friendship friendship);
     }
 }
