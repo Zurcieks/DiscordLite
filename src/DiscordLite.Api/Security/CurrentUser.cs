@@ -14,7 +14,11 @@ public class CurrentUser(IHttpContextAccessor accessor) : ICurrentUser
             var userIdClaim = accessor.HttpContext?
                 .User.FindFirstValue(JwtRegisteredClaimNames.Sub);
 
-            return !Guid.TryParse(userIdClaim, out var userId) ? throw new UnauthorizedException("Invalid user id claim.") : userId;
+            return !Guid.TryParse(userIdClaim, out var userId)
+                ? throw new UnauthorizedException(
+                    "AUTH_USER_ID_CLAIM_INVALID",
+                    "Invalid user id claim.")
+                : userId;
         }
     }
 }

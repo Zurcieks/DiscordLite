@@ -8,23 +8,30 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="coverlet.collector" Version="6.0.4"/>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1"/>
-        <PackageReference Include="xunit" Version="2.9.3"/>
-        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4"/>
+        <PackageReference Include="coverlet.collector" Version="6.0.4" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.8.1" />
+        <PackageReference Include="Moq" Version="4.20.72" />
+        <PackageReference Include="xunit" Version="2.9.3" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.1.4" />
     </ItemGroup>
 
     <ItemGroup>
-        <Using Include="Xunit"/>
+        <Using Include="Xunit" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DiscordLite.Application\DiscordLite.Application.csproj" />
-      <ProjectReference Include="..\DiscordLite.Domain\DiscordLite.Domain.csproj" />
+        <ProjectReference Include="..\..\src\DiscordLite.Application\DiscordLite.Application.csproj" />
+        <ProjectReference Include="..\..\src\DiscordLite.Domain\DiscordLite.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DiscordLite.Application\" />
+      <Folder Include="DiscordLite.Application\Friendship\AcceptFriendRequest\" />
+      <Folder Include="DiscordLite.Application\Friendship\AddFriend\" />
+      <Folder Include="DiscordLite.Application\Friendship\CancelFriendRequest\" />
+      <Folder Include="DiscordLite.Application\Friendship\DeleteFriend\" />
+      <Folder Include="DiscordLite.Application\Friendship\RejectFriendRequest\" />
+      <Folder Include="DiscordLite.Application\GetAllFriends\" />
+      <Folder Include="DiscordLite.Application\GetFriendRequests\" />
       <Folder Include="DiscordLite.Domain\" />
     </ItemGroup>
 

@@ -8,19 +8,30 @@ namespace DiscordLite.Application.Auth.Refresh;
 public sealed class RefreshTokenCommandHandler(
     IRefreshTokenRepository refreshTokenRepository,
     IUserRepository userRepository,
-    ITokenService tokenService) : IRequestHandler<RefreshTokenCommand, RefreshTokenResponse>
+    ITokenService tokenService,
+    IRefreshTokenCookieWriter cookieWriter)
+    : IRequestHandler<RefreshTokenCommand, RefreshTokenResponse>
 {
-    public async Task<RefreshTokenResponse> Handle(RefreshTokenCommand request, CancellationToken ct)
+    public async Task<RefreshTokenResponse> Handle(
+        RefreshTokenCommand request,
+        CancellationToken ct)
     {
         var tokenHash = tokenService.HashRefreshToken(request.RefreshToken);
 
-        var existingToken = await refreshTokenRepository.GetByTokenHashAsync(tokenHash, ct);
+        var existingToken = await refreshTokenRepository
+            .GetByTokenHashAsync(tokenHash, ct);
 
         if (existingToken is null || !existingToken.IsActive)
-            throw new UnauthorizedException("Invalid or expired refresh token.");
+        {
+            throw new UnauthorizedException(
+                "AUTH_REFRESH_TOKEN_INVALID",
+                "Invalid or expired refresh token.");
+        }
 
         var user = await userRepository.GetByIdAsync(existingToken.UserId, ct)
-                   ?? throw new UnauthorizedException("Invalid or expired refresh token.");
+                   ?? throw new UnauthorizedException(
+                       "AUTH_REFRESH_TOKEN_INVALID",
+                       "Invalid or expired refresh token.");
 
         existingToken.Revoke();
 
@@ -35,8 +46,12 @@ public sealed class RefreshTokenCommandHandler(
         await refreshTokenRepository.AddAsync(newRefreshToken, ct);
         await refreshTokenRepository.SaveChangesAsync(ct);
 
-        var newAccessToken = tokenService.GenerateAccessToken(user.Id, user.Username);
+        var newAccessToken = tokenService.GenerateAccessToken(
+            user.Id,
+            user.Username);
 
-        return new RefreshTokenResponse(newAccessToken, newRefreshTokenPlain);
+        cookieWriter.Write(newRefreshTokenPlain);
+
+        return new RefreshTokenResponse(newAccessToken);
     }
 }

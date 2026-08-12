@@ -1,3 +1,3 @@
 namespace DiscordLite.Domain.Exceptions;
 
-public abstract class DomainException(string message) : Exception(message);
+public abstract class DomainException(string code, string message) : Exception(message);

@@ -13,10 +13,25 @@ public sealed class RefreshToken
 
     private RefreshToken() { }
 
-    public static RefreshToken Create(Guid userId, string tokenHash, DateTime expiresAt)
+    public static RefreshToken Create(
+        Guid userId,
+        string tokenHash,
+        DateTime expiresAt)
     {
+        if (userId == Guid.Empty)
+            throw new DomainValidationException(
+                "REFRESH_TOKEN_USER_ID_EMPTY",
+                "UserId cannot be empty.");
+
         if (string.IsNullOrWhiteSpace(tokenHash))
-            throw new InvalidRefreshTokenException("Token hash cannot be empty");
+            throw new DomainValidationException(
+                "REFRESH_TOKEN_HASH_EMPTY",
+                "Token hash cannot be empty.");
+
+        if (expiresAt <= DateTime.UtcNow)
+            throw new DomainValidationException(
+                "REFRESH_TOKEN_EXPIRATION_INVALID",
+                "ExpiresAt must be in the future.");
 
         return new RefreshToken
         {
@@ -28,7 +43,14 @@ public sealed class RefreshToken
         };
     }
 
-    public bool IsActive => RevokedAt is null && DateTime.UtcNow < ExpiresAt;
+    public bool IsActive =>
+        RevokedAt is null && DateTime.UtcNow < ExpiresAt;
 
-    public void Revoke() => RevokedAt = DateTime.UtcNow;
+    public void Revoke()
+    {
+        if (RevokedAt is not null)
+            return;
+
+        RevokedAt = DateTime.UtcNow;
+    }
 }

@@ -47,7 +47,7 @@ namespace DiscordLite.Api.Controllers
             return Ok(await sender.Send(new GetAllFriendsQuery(), ct));
         }
 
-        [HttpPost("requests/{friendshipId}/cancel")]
+        [HttpPost("requests/{friendshipId:guid}/cancel")]
         public async Task<ActionResult> CancelFriend(
             [FromRoute] Guid friendshipId,
             CancellationToken ct)
@@ -57,7 +57,7 @@ namespace DiscordLite.Api.Controllers
             return NoContent();
         }
 
-        [HttpPost("requests/{friendshipId}/reject")]
+        [HttpPost("requests/{friendshipId:guid}/reject")]
         public async Task<ActionResult> RejectFriend(
             [FromRoute] Guid friendshipId,
             CancellationToken ct)
@@ -67,7 +67,7 @@ namespace DiscordLite.Api.Controllers
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpDelete("{friendshipId:guid}")]
         public async Task<ActionResult> DeleteFriend(
             [FromRoute] Guid friendshipId,
             CancellationToken ct)

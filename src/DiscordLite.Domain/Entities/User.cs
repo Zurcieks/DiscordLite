@@ -9,34 +9,49 @@ public sealed class User
     public string NormalizedUsername { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public string? AvatarUrl { get; private set; }
-    
-    private User() {}
- 
+
+    private User() { }
+
     public static User Create(string username, string passwordHash)
     {
-        if(string.IsNullOrWhiteSpace(username) || username.Length < 3 || username.Length > 30)
-            throw new InvalidUsernameException(username);
+        if (string.IsNullOrWhiteSpace(username))
+            throw new DomainValidationException(
+                "USER_USERNAME_EMPTY",
+                "Username cannot be empty.");
+
+        var trimmedUsername = username.Trim();
+
+        if (trimmedUsername.Length is < 3 or > 30)
+            throw new DomainValidationException(
+                "USER_USERNAME_INVALID_LENGTH",
+                "Username must be between 3 and 30 characters long.");
+
         if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new InvalidPasswordHashException("PasswordHash cannot be null or empty");
-        
+            throw new DomainValidationException(
+                "USER_PASSWORD_HASH_EMPTY",
+                "Password hash cannot be null or empty.");
+
         return new User
         {
             Id = Guid.NewGuid(),
-            Username = username,
-            NormalizedUsername = NormalizeUsername(username),
-            PasswordHash = passwordHash,
+            Username = trimmedUsername,
+            NormalizedUsername = trimmedUsername.ToLowerInvariant(),
+            PasswordHash = passwordHash
         };
     }
 
     public void ChangeAvatar(string? avatarUrl)
     {
-        if(avatarUrl is not null && string.IsNullOrWhiteSpace(avatarUrl))
-            throw new InvalidAvatarUrlException(avatarUrl);
-        
+        if (avatarUrl is not null && string.IsNullOrWhiteSpace(avatarUrl))
+            throw new DomainValidationException(
+                "USER_AVATAR_URL_INVALID",
+                "Avatar URL cannot be empty or whitespace.");
+
         AvatarUrl = avatarUrl;
     }
-    
-    public static string NormalizeUsername(string username) => username.Trim().ToLowerInvariant();
-     
 
+    public static string NormalizeUsername(string username)
+    {
+        return username.Trim().ToLowerInvariant();
+    }
 }

@@ -9,17 +9,31 @@ public sealed class LoginUserCommandHandler(
     IUserRepository userRepository,
     IRefreshTokenRepository refreshTokenRepository,
     IPasswordService passwordService,
-    ITokenService tokenService) : IRequestHandler<LoginUserCommand, LoginUserResponse>
+    ITokenService tokenService,
+    IRefreshTokenCookieWriter cookieWriter)
+    : IRequestHandler<LoginUserCommand, LoginUserResponse>
 {
-    public async Task<LoginUserResponse> Handle(LoginUserCommand request, CancellationToken ct)
+    public async Task<LoginUserResponse> Handle(
+        LoginUserCommand request,
+        CancellationToken ct)
     {
         var normalized = User.NormalizeUsername(request.Username);
-        var user = await userRepository.GetByNormalizedUsernameAsync(normalized, ct);
 
-        if (user is null || !passwordService.Verify(request.Password, user.PasswordHash))
-            throw new UnauthorizedException("Invalid username or password.");
+        var user = await userRepository
+            .GetByNormalizedUsernameAsync(normalized, ct);
 
-        var accessToken = tokenService.GenerateAccessToken(user.Id, user.Username);
+        if (user is null ||
+            !passwordService.Verify(request.Password, user.PasswordHash))
+        {
+            throw new UnauthorizedException(
+                "AUTH_INVALID_CREDENTIALS",
+                "Invalid username or password.");
+        }
+
+        var accessToken = tokenService.GenerateAccessToken(
+            user.Id,
+            user.Username);
+
         var refreshTokenPlain = tokenService.GenerateRefreshToken();
         var refreshTokenHash = tokenService.HashRefreshToken(refreshTokenPlain);
 
@@ -31,7 +45,11 @@ public sealed class LoginUserCommandHandler(
         await refreshTokenRepository.AddAsync(refreshToken, ct);
         await refreshTokenRepository.SaveChangesAsync(ct);
 
-        return new LoginUserResponse(user.Id, user.Username, accessToken, refreshTokenPlain);
+        cookieWriter.Write(refreshTokenPlain);
 
+        return new LoginUserResponse(
+            user.Id,
+            user.Username,
+            accessToken);
     }
 }

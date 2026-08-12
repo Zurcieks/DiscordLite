@@ -34,24 +34,20 @@ public sealed class GlobalExceptionHandler(
             ValidationRequestException =>
                 (StatusCodes.Status400BadRequest, "Validation Error"),
             
-            InvalidUsernameException => 
-                (StatusCodes.Status400BadRequest, "Invalid Username"),
-            InvalidPasswordHashException =>
-                (StatusCodes.Status400BadRequest, "Invalid Password Hash"),
-            InvalidAvatarUrlException => 
-                (StatusCodes.Status400BadRequest, "Invalid Avatar Url"),
-            InvalidUserIdException =>
-                (StatusCodes.Status400BadRequest, "Invalid User Id"),
-            NotFriendRequestReceiverException => 
-                (StatusCodes.Status400BadRequest, "Not Friend Request Receiver"),
-            SelfFriendRequestException =>
-                (StatusCodes.Status400BadRequest, "Self Friend Request"),
-            InvalidFriendshipRequestException => 
-                (StatusCodes.Status400BadRequest, "Invalid Friendship Request"),
-
+            DomainValidationException => 
+                (StatusCodes.Status400BadRequest, "Validation Error"),
+            
+            DomainForbiddenException =>
+                (StatusCodes.Status403Forbidden, "Forbidden"),
+            
+            DomainConflictException =>
+                (StatusCodes.Status409Conflict, "Conflict"),
+            
             DomainException =>
                 (StatusCodes.Status422UnprocessableEntity,
                     "Business Rule Violation"),
+            
+            
 
             _ =>
                 (StatusCodes.Status500InternalServerError,

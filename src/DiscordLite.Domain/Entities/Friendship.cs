@@ -1,7 +1,4 @@
 ﻿using DiscordLite.Domain.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiscordLite.Domain.Entities
 {
@@ -18,16 +15,24 @@ namespace DiscordLite.Domain.Entities
 
         public static Friendship Create(Guid senderId, Guid receiverId)
         {
-            if(Guid.Empty == senderId)
-                throw new InvalidUserIdException("SenderId cannot be empty.");
+            if (senderId == Guid.Empty)
+                throw new DomainValidationException(
+                    "FRIENDSHIP_SENDER_ID_EMPTY",
+                    "SenderId cannot be empty.");
 
-            if (Guid.Empty == receiverId)
-                throw new InvalidUserIdException("ReceiverId cannot be empty.");
-            if(senderId == receiverId)
-                throw new SelfFriendRequestException("SenderId and ReceiverId cannot be the same.");
+            if (receiverId == Guid.Empty)
+                throw new DomainValidationException(
+                    "FRIENDSHIP_RECEIVER_ID_EMPTY",
+                    "ReceiverId cannot be empty.");
+
+            if (senderId == receiverId)
+                throw new DomainValidationException(
+                    "FRIENDSHIP_SELF_REQUEST",
+                    "SenderId and ReceiverId cannot be the same.");
 
             return new Friendship
             {
+                Id = Guid.NewGuid(),
                 SenderId = senderId,
                 ReceiverId = receiverId,
                 Status = FriendshipStatus.Pending,
@@ -37,25 +42,29 @@ namespace DiscordLite.Domain.Entities
 
         public void Accept(Guid receiverId)
         {
-            if (Guid.Empty == receiverId)
-                throw new InvalidUserIdException("ReceiverId cannot be empty.");
+            if (receiverId == Guid.Empty)
+                throw new DomainValidationException(
+                    "FRIENDSHIP_RECEIVER_ID_EMPTY",
+                    "ReceiverId cannot be empty.");
 
             if (receiverId != ReceiverId)
-                throw new NotFriendRequestReceiverException("Only the receiver can accept the friend request.");
+                throw new DomainForbiddenException(
+                    "FRIENDSHIP_NOT_REQUEST_RECEIVER",
+                    "Only the receiver can accept the friend request.");
 
-            if(Status != FriendshipStatus.Pending)
-                throw new InvalidFriendshipRequestException("Only pending friend requests can be accepted.");
+            if (Status != FriendshipStatus.Pending)
+                throw new DomainConflictException(
+                    "FRIENDSHIP_REQUEST_NOT_PENDING",
+                    "Only pending friend requests can be accepted.");
 
             Status = FriendshipStatus.Accepted;
             RespondedAt = DateTime.UtcNow;
-
         }
-        
     }
 
     public enum FriendshipStatus
     {
         Pending,
-        Accepted,
+        Accepted
     }
 }

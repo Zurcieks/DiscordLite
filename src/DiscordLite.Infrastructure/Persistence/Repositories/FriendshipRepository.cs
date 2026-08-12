@@ -13,7 +13,7 @@ namespace DiscordLite.Infrastructure.Persistence.Repositories
 {
     public sealed class FriendshipRepository(AppDbContext context) : RepositoryBase<Friendship>(context), IFriendshipRepository
     {
-        public async Task<List<FriendDto>> GetAllFriends(Guid userId, CancellationToken ct)
+        public async Task<List<FriendshipDto>> GetAllFriends(Guid userId, CancellationToken ct)
         {
             return await Context.Friendships
                 .Where(x => x.Status == FriendshipStatus.Accepted && 
@@ -22,8 +22,9 @@ namespace DiscordLite.Infrastructure.Persistence.Repositories
                 Context.Users,
                 friends => friends.SenderId == userId ? friends.ReceiverId : friends.SenderId, 
                 user => user.Id,
-                (friends, user) => new FriendDto
+                (friends, user) => new FriendshipDto
                 (
+                    friends.Id,
                     user.Id,
                     user.Username,
                     user.AvatarUrl

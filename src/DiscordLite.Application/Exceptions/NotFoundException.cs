@@ -1,4 +1,4 @@
 namespace DiscordLite.Application.Exceptions;
 
-public sealed  class NotFoundException(string message) : 
-    AppException(message);
+public sealed  class NotFoundException(string code, string message) : 
+    AppException(code, message);

@@ -1,6 +1,6 @@
 namespace DiscordLite.Application.Abstractions;
 
-public class IRefreshTokenCookieWriter
+public interface IRefreshTokenCookieWriter
 {
-    
+    void Write(string refreshToken);
 }
