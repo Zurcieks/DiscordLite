@@ -10,7 +10,8 @@ public sealed class LoginUserCommandHandler(
     IRefreshTokenRepository refreshTokenRepository,
     IPasswordService passwordService,
     ITokenService tokenService,
-    IRefreshTokenCookieWriter cookieWriter)
+    IRefreshTokenCookieWriter cookieWriter,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<LoginUserCommand, LoginUserResponse>
 {
     public async Task<LoginUserResponse> Handle(
@@ -43,7 +44,7 @@ public sealed class LoginUserCommandHandler(
             tokenService.GetRefreshTokenExpiry());
 
         await refreshTokenRepository.AddAsync(refreshToken, ct);
-        await refreshTokenRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         cookieWriter.Write(refreshTokenPlain);
 

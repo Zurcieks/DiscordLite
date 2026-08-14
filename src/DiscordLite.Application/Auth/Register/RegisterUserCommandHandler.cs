@@ -7,8 +7,11 @@ namespace DiscordLite.Application.Auth.Register;
 
 public sealed class RegisterUserCommandHandler(
     IUserRepository userRepository,
+    IRefreshTokenRepository refreshTokenRepository,
+    IRefreshTokenCookieWriter cookieWriter,
     IPasswordService passwordService,
-    ITokenService tokenService)
+    ITokenService tokenService,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<RegisterUserCommand, RegisterUserResponse>
 {
     public async Task<RegisterUserResponse> Handle(
@@ -34,11 +37,26 @@ public sealed class RegisterUserCommandHandler(
             passwordHash);
 
         await userRepository.AddAsync(user, ct);
-        await userRepository.SaveChangesAsync(ct);
 
         var accessToken = tokenService.GenerateAccessToken(
             user.Id,
             user.Username);
+
+        var refreshTokenPlain = tokenService.GenerateRefreshToken();
+        var refreshTokenHash = tokenService.HashRefreshToken(refreshTokenPlain);
+
+        var refreshToken = RefreshToken.Create(
+            user.Id,
+            refreshTokenHash,
+            tokenService.GetRefreshTokenExpiry());
+
+        await refreshTokenRepository.AddAsync(refreshToken, ct);
+        
+        await unitOfWork.SaveChangesAsync(ct);
+        
+
+        cookieWriter.Write(refreshTokenPlain);
+        
 
         return new RegisterUserResponse(
             user.Id,

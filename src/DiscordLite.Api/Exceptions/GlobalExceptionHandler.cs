@@ -90,6 +90,11 @@ public sealed class GlobalExceptionHandler(
                 validationException.Errors;
         }
 
+        if (exception is AppException appException)
+        {
+            problemDetails.Extensions["code"] = appException.Code;
+        }
+
         httpContext.Response.StatusCode = statusCode;
 
         await httpContext.Response.WriteAsJsonAsync(

@@ -6,7 +6,8 @@ namespace DiscordLite.Application.Friendships.AcceptFriend
 {
     public sealed class AcceptFriendCommandHandler(
         IFriendshipRepository friendshipRepository,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser,
+        IUnitOfWork unitOfWork)
         : IRequestHandler<AcceptFriendCommand>
     {
         public async Task Handle(
@@ -27,7 +28,7 @@ namespace DiscordLite.Application.Friendships.AcceptFriend
 
             friendship.Accept(userId);
 
-            await friendshipRepository.SaveChangesAsync(ct);
+            await unitOfWork.SaveChangesAsync(ct);
         }
     }
 }

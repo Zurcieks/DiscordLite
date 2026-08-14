@@ -9,7 +9,8 @@ public sealed class RefreshTokenCommandHandler(
     IRefreshTokenRepository refreshTokenRepository,
     IUserRepository userRepository,
     ITokenService tokenService,
-    IRefreshTokenCookieWriter cookieWriter)
+    IRefreshTokenCookieWriter cookieWriter,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<RefreshTokenCommand, RefreshTokenResponse>
 {
     public async Task<RefreshTokenResponse> Handle(
@@ -44,7 +45,7 @@ public sealed class RefreshTokenCommandHandler(
             tokenService.GetRefreshTokenExpiry());
 
         await refreshTokenRepository.AddAsync(newRefreshToken, ct);
-        await refreshTokenRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
 
         var newAccessToken = tokenService.GenerateAccessToken(
             user.Id,

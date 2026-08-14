@@ -7,12 +7,14 @@ namespace DiscordLite.Application.Friendships.DeleteFriend;
 
 public class DeleteFriendCommandHandler(
     IFriendshipRepository friendshipRepository,
-    ICurrentUser currentUser)
+    ICurrentUser currentUser,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<DeleteFriendCommand>
 {
     public async Task Handle(
         DeleteFriendCommand request,
-        CancellationToken ct)
+        CancellationToken ct
+        )
     {
         var userId = currentUser.UserId;
 
@@ -43,6 +45,6 @@ public class DeleteFriendCommandHandler(
 
         friendshipRepository.Remove(friendship);
 
-        await friendshipRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
     }
 }

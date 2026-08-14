@@ -8,7 +8,8 @@ namespace DiscordLite.Application.Friendships.AddFriend
     public sealed class AddFriendCommandHandler(
         IFriendshipRepository friendshipRepository,
         IUserRepository userRepository,
-        ICurrentUser currentUser)
+        ICurrentUser currentUser,
+        IUnitOfWork unitOfWork)
         : IRequestHandler<AddFriendCommand, string>
     {
         public async Task<string> Handle(
@@ -60,7 +61,7 @@ namespace DiscordLite.Application.Friendships.AddFriend
                 receiver.Id);
 
             await friendshipRepository.AddAsync(friendship, ct);
-            await friendshipRepository.SaveChangesAsync(ct);
+            await unitOfWork.SaveChangesAsync(ct);
 
             return "Friend request sent successfully.";
         }

@@ -16,5 +16,4 @@ public abstract class RepositoryBase<T>(AppDbContext context): IRepository<T> wh
         Context.Set<T>().Remove(entity);
     }
 
-    public Task SaveChangesAsync(CancellationToken ct) => Context.SaveChangesAsync(ct);
 }

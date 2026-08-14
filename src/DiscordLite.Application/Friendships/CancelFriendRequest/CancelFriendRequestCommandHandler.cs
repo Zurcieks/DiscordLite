@@ -7,7 +7,8 @@ namespace DiscordLite.Application.Friendships.CancelFriendRequest;
 
 public sealed class CancelFriendRequestCommandHandler(
     IFriendshipRepository friendshipRepository,
-    ICurrentUser currentUser)
+    ICurrentUser currentUser,
+    IUnitOfWork unitOfWork)
     : IRequestHandler<CancelFriendRequestCommand>
 {
     public async Task Handle(
@@ -42,6 +43,6 @@ public sealed class CancelFriendRequestCommandHandler(
 
         friendshipRepository.Remove(friendship);
 
-        await friendshipRepository.SaveChangesAsync(ct);
+        await unitOfWork.SaveChangesAsync(ct);
     }
 }
