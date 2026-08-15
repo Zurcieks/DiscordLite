@@ -61,6 +61,7 @@ public sealed class RegisterUserCommandHandler(
         return new RegisterUserResponse(
             user.Id,
             user.Username,
+            user.AvatarUrl,
             accessToken);
     }
 }

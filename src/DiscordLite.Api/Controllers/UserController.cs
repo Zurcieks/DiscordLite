@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DiscordLite.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/user")]
 public sealed class UserController(ISender sender) : ControllerBase
 {
     [Authorize]

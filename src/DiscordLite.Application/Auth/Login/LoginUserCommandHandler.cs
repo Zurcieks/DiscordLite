@@ -51,6 +51,7 @@ public sealed class LoginUserCommandHandler(
         return new LoginUserResponse(
             user.Id,
             user.Username,
+            user.AvatarUrl,
             accessToken);
     }
 }
