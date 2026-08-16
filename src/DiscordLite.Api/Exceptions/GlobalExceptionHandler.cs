@@ -95,6 +95,11 @@ public sealed class GlobalExceptionHandler(
             problemDetails.Extensions["code"] = appException.Code;
         }
 
+        if (exception is DomainException domainException)
+        {
+            problemDetails.Extensions["code"] = domainException.Code;
+        }
+
         httpContext.Response.StatusCode = statusCode;
 
         await httpContext.Response.WriteAsJsonAsync(
