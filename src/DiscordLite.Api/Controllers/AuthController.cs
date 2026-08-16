@@ -1,4 +1,5 @@
 using DiscordLite.Application.Auth.Login;
+using DiscordLite.Application.Auth.Logout;
 using DiscordLite.Application.Auth.Refresh;
 using DiscordLite.Application.Auth.Register;
 using MediatR;
@@ -41,6 +42,20 @@ public sealed class AuthController(ISender sender) : ControllerBase
         
 
         return Ok(result);
+    }
+
+    [HttpPost("logout")]
+    public async Task<ActionResult> Logout(CancellationToken ct)
+    {
+        var refreshToken = Request.Cookies[RefreshTokenCookieName];
+        
+        if (string.IsNullOrWhiteSpace(refreshToken))
+            return NoContent();
+        
+        await sender.Send(new LogoutCommand(refreshToken), ct);
+        
+        
+        return NoContent();
     }
 
 }

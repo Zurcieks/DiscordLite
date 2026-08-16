@@ -4,4 +4,4 @@ namespace DiscordLite.Application.Users.GetMyProfile;
 
 public sealed record GetMyProfileQuery : IRequest<UserProfileResponse>;
 
-public sealed record UserProfileResponse(Guid Id, string Username, string? AvatarUrl);
+public sealed record UserProfileResponse(Guid UserId, string Username, string? AvatarUrl);
